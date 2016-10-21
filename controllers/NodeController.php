@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 
+use app\models\RemoteNode;
 use yii\web\Controller;
 
 class NodeController extends Controller
@@ -16,6 +17,13 @@ class NodeController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        var_dump(\Yii::$app->get('botParser')->getNodes()->all());
+//        return $this->render('index');
+    }
+
+    public function actionIndexing(){
+        \Yii::$app->session->removeAll();
+        $search = \Yii::$app->search;
+        $search->index();
     }
 }

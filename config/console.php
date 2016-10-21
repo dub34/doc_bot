@@ -17,7 +17,7 @@ $config = [
         'search' => [
             'class' => 'himiklab\yii2\search\Search',
             'models' => [
-                'app\models\Question',
+                'app\models\Node',
             ],
         ],
         'log' => [

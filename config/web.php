@@ -17,8 +17,12 @@ $config = [
         'search' => [
             'class' => 'himiklab\yii2\search\Search',
             'models' => [
-                'app\models\Question',
+                \app\models\RemoteNode::class,
             ],
+        ],
+        'botParser' => [
+            'class' => 'app\components\BotParser',
+            'apiToken' => 'QW50b25fVmFybmF2c2tpeTpMYXNWZWdhczEyMw==',
         ],
         'mystem' => [
             'class' => 'Mystem\YiiMystem',
@@ -69,6 +73,15 @@ $config = [
         ],
         */
     ],
+    'modules' => [
+        'treemanager' => [
+            'class' => '\kartik\tree\Module',
+            'treeViewSettings' => [
+                'nodeView' => '@app/views/node/_form'
+            ]
+
+        ]
+    ],
     'params' => $params,
 ];
 
@@ -77,6 +90,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
+        'allowedIPs' => ['*']
     ];
 
     $config['bootstrap'][] = 'gii';

@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Dialog;
+use app\models\search\NodeSearch;
 use app\models\WordExtractor;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -49,22 +51,23 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($answer = null)
     {
         $model = new WordExtractor();
-        if (\Yii::$app->request->get('answer')) {
-            $model->searchQuestion(\Yii::$app->request->get('question'));
+        $nodes = null;
+        $question = null;
 
-        } else {
-            if ($model->load(\Yii::$app->request->post())) {
-                {
-                    $model->extractWords()
-                        ->stemmWords()
-                        ->searchQuestion();
-                }
-            }
+        if ($model->load(\Yii::$app->request->post()) || null !== $answer) {
+            $nodes = (new NodeSearch())->search($model, $answer);
+            $question = (new Dialog([], $nodes))->getQuestion();
         }
-        return $this->render('index', ['model' => $model]);
+
+         return $this->render('index', [
+            'model' => $model,
+            'nodes' => $nodes,
+            'question' => $question,
+            'answer' => $answer
+        ]);
     }
 
 //    public function actionSearch($q = '')
@@ -116,6 +119,7 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
 
     public function actionAbout()
     {

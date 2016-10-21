@@ -9,14 +9,27 @@
 namespace app\controllers;
 
 
+use app\models\Question;
+use app\models\search\NodeSearch;
+use app\models\search\QuestionSearch;
 use yii\web\Controller;
 
 class QuestionController extends Controller
 {
     public function actionIndex()
     {
-        $search = \Yii::$app->search;
-        $search->index();
+        $dataProvider = (new QuestionSearch())->search();
+        return $this->render('index', ['questions' => $dataProvider]);
     }
 
+    public function actionCreate()
+    {
+        $question = new Question();
+
+        if ($question->load(\Yii::$app->request->post()) && $question->validate()) {
+            $question->save();
+            return $this->redirect(['/question']);
+        }
+        return $this->render('create', ['question' => $question]);
+    }
 }

@@ -8,28 +8,23 @@
 
 namespace app\models;
 
-
 use himiklab\yii2\search\behaviors\SearchBehavior;
-use yii\base\Model;
 use yii\db\ActiveRecord;
 
-class Question extends Model
+class Question extends ActiveRecord
 {
-    public $id;
-    public $text;
-    public $keywords;
-    public $answer;
-
     public function rules()
     {
         return [
-            [['id', 'text', 'keywords', 'answer'], 'safe']
+            [['text',], 'string'],
+            [['lvl', 'root'], 'integer'],
+            [['lvl', 'root'], 'unique', 'targetAttribute' => ['lvl', 'root']]
         ];
     }
 
     public static function tableName()
     {
-        return 'question';
+        return '{{%question}}';
     }
 
 
@@ -38,99 +33,22 @@ class Question extends Model
         return new QuestionQuery(get_called_class());
     }
 
-
-    public function behaviors()
+    public function getTags()
     {
-        return [
-            'search' => [
-                'class' => SearchBehavior::className(),
-//                'searchScope' => function ($model) {
-                    /** @var \yii\db\ActiveQuery $model */
-//            $model->select(['keywords']);
-//                },
-                'searchFields' => function ($model) {
-                    /** @var self $model */
-                    return [
-                        ['name' => 'uid', 'value' => $model->id],
-                        ['name' => 'keywords', 'value' => strip_tags($model->keywords)],
-                    ];
-                }
-            ],
-        ];
+        $nodeId = \Yii::$app->session->get('node');
+        $node = Node::find()->where(['id' => $nodeId])->one();
+        if (null !== $node) {
+            $nodes = $node->children(1)->all();
+        } else {
+            $nodes = [];
+        }
+        return $nodes;
+//        return Node::find()->andWhere(['lvl' => $this->lvl, 'root' => $this->root])->all();
+//        return Node::find()->andWhere(['lvl' => $this->lvl, 'root' => $this->root])->all();
     }
 
-    public static function questions()
+    public function getNode()
     {
-        return [
-            [
-                'id' => 1,
-                'text' => 'Вы хотите отремонтировать автомобиль Mazda?',
-                'keywords' => 'ремонт,ремонтировать,ремонт проблема,сломаться,ломаться,
-                            обслуживание,замена, заменить, сервис,автосервис,запчасти, мазда,mazda,трешка,шестерка,хотеть,починить,починять,хочу починить,отремонтировать',
-                'answer' => [
-                    'text' => 'Выберите модель:',
-                    'options' =>
-                        [
-                            'Mazda 3',
-                            'Mazda 6',
-                            'CX-5',
-                            'CX-7',
-                        ]
-                ]
-            ],
-            [
-                'id' => 2,
-                'text' => 'Вы хотите отремонтировать автомобиль Mercedes?',
-                'keywords' => 'ремонт,ремонтировать,ремонт проблема,сломаться,ломаться,
-                            обслуживание,замена, заменить, сервис,автосервис,запчасти,mercedes,мерседес,mersedes, мерин',
-                'answer' => [
-                    'text' => 'Выберите год выпуска:',
-                    'options' => [
-                        '2016',
-                        '2015',
-                        '2014',
-                        '2013',
-                        '2012',
-                        '2011',
-                        '2010 и старше',
-                    ]
-                ]
-            ],
-            [
-                'id' => 3,
-                'text' => 'Вас интересуют новые модели Mercedes ?',
-                'keywords' => 'купить,новый,модель,новинка, хотеть,mercedes,мерседес,mersedes, мерин',
-                'answer' => [
-                    'text' => 'Какой класс автомобиля вас интересует?',
-                    'options' => [
-                        'Седаны',
-                        'Хэтчбэки',
-                        'Универсалы',
-                        'Купе',
-                        'Кабриолеты и родстеры',
-                        'Внедородники',
-                        'Минивэны',
-                    ]
-                ]
-            ],
-            [
-                'id' => 4,
-                'text' => 'Вас интересуют новые модели Mazda?',
-                'keywords' => 'купить,новый,модель,новинка,хотеть,мазда,mazda,трешка,шестерка',
-                'answer' => [
-                    'text' => 'Какая модель вас интересует?',
-                    'options' => [
-                        'Mazda 3',
-                        'Mazda 6',
-                        'CX-5',
-                        'CX-7',
-                    ]
-                ]
-            ],
-        ];
+        return $this->hasOne(Node::className(), ['id' => 'node_id']);
     }
-
-//    public function getSearchModels(){
-//        return new QuestionQuery(get_called_class());
-//    }
 }
