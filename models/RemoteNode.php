@@ -31,9 +31,9 @@ class RemoteNode extends Model
             'searchFields' => function ($model) {
                 /** @var self $model */
                 return [
-                    ['name' => 'node_id', 'value' => $model->nodeId, SearchBehavior::FIELD_KEYWORD],
-                    ['name' => 'block_id', 'value' => $model->blockId, SearchBehavior::FIELD_KEYWORD],
-                    ['name' => 'tag', 'value' => strip_tags($model->tags), SearchBehavior::FIELD_TEXT],
+                    ['name' => 'nodeId', 'value' => $model->nodeId, SearchBehavior::FIELD_KEYWORD],
+                    ['name' => 'blockId', 'value' => $model->blockId, SearchBehavior::FIELD_KEYWORD],
+                    ['name' => 'tag', 'value' => strip_tags($model->tags), SearchBehavior::FIELD_KEYWORD],
 //                    ['name' => 'lvl', 'value' => $model->lvl, SearchBehavior::FIELD_KEYWORD],
 //                    ['name' => 'root', 'value' => $model->root, SearchBehavior::FIELD_KEYWORD],
                     ['name' => 'name', 'value' => $model->nodeName, SearchBehavior::FIELD_TEXT],

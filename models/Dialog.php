@@ -33,8 +33,8 @@ class Dialog extends Model
 
     private function prepareSearchResult($searchResult)
     {
-        $this->prepareRoot($searchResult);
-        $this->prepareLevel($searchResult);
+//        $this->prepareRoot($searchResult);
+//        $this->prepareLevel($searchResult);
     }
 
     private function prepareRoot($searchResult)

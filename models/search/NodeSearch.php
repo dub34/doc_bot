@@ -18,11 +18,11 @@ class NodeSearch extends Node
 {
     public function init()
     {
-        $this->root = \Yii::$app->session->get('root');
-        $this->lvl = \Yii::$app->session->get('lvl');
-        $this->id = \Yii::$app->session->get('node');
-        $this->foundNodes = \Yii::$app->session->get('foundNodes');
-        $this->negativeAnsweredNodes = \Yii::$app->session->get('negativeAnsweredNodes');
+//        $this->root = \Yii::$app->session->get('root');
+//        $this->lvl = \Yii::$app->session->get('lvl');
+//        $this->id = \Yii::$app->session->get('node');
+//        $this->foundNodes = \Yii::$app->session->get('foundNodes');
+//        $this->negativeAnsweredNodes = \Yii::$app->session->get('negativeAnsweredNodes');
         parent::init();
     }
 
@@ -40,29 +40,34 @@ class NodeSearch extends Node
     {
         $keywords = $model->extractWords()->stemmWords();
 
-        $models = [];
+        $blocks = [];
         /**
          * @var $keyword ArticleWord
          */
         foreach ($keywords->getStemm()->words as $keyword) {
-            $queryString = 'tag:' . $keyword->normalized();
+            $queryString = 'tag:' . $keyword->normalized().'~';
 
-            if (null !== $this->root && !is_array($this->root)) {
-                $queryString .= " root:(+$this->root)";
-            }
-
-            if (null !== $this->id) {
-                $queryString .= "parent:(+$this->id)";
-            }
+//            if (null !== $this->root && !is_array($this->root)) {
+//                $queryString .= " root:(+$this->root)";
+//            }
+//
+//            if (null !== $this->id) {
+//                $queryString .= "parent:(+$this->id)";
+//            }
 
             $query = \Yii::$app->search->find($queryString);
             foreach (ArrayHelper::getValue($query, 'results', []) as $found) {
-                if (!in_array($found->node_id, $models)) {
-                    $models[$found->root][] = Node::findOne($found->node_id);
-                }
+//                if (!in_array($found->blockId, $models)) {
+                $blocks[] = $found->blockId;
+//                }
             }
         }
-        return $models;
+        if (!empty($blocks)) {
+            $acv = array_count_values($blocks); //  1=>2, 2=>3,3=>1
+            arsort($acv); //save keys,           2=>3, 1=>2, 3=>1
+            $blocks = array_keys($acv);
+        }
+        return $blocks;
     }
 
     public function searchByAnswer($answer)
@@ -73,7 +78,7 @@ class NodeSearch extends Node
             \Yii::$app->session->set('negativeAnsweredNodes', $this->negativeAnsweredNodes);
             $this->id = current(array_diff($this->foundNodes, $this->negativeAnsweredNodes));
         }
-        if(false == $this->id){
+        if (false == $this->id) {
             return null;
         }
         $models[$this->root][] = Node::findOne($this->id);

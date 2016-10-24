@@ -29,10 +29,19 @@ class Request
     public function all()
     {
         $response = $this->request->send();
+//        $result = [];
         if ($response->isOk) {
             return $this->prepareResult($response->data);
+//            if ($this->resolvePagination($response->data)){
+//
+//            }
         }
         return [];
+    }
+
+    private function resolvePagination($data = null)
+    {
+        return ArrayHelper::getValue($data, 'results.next');
     }
 
     private function prepareResult($data)

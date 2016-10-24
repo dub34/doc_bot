@@ -59,13 +59,13 @@ class SiteController extends Controller
 
         if ($model->load(\Yii::$app->request->post()) || null !== $answer) {
             $nodes = (new NodeSearch())->search($model, $answer);
-            $question = (new Dialog([], $nodes))->getQuestion();
+//            $question = (new Dialog([], $nodes))->getQuestion();
         }
 
          return $this->render('index', [
             'model' => $model,
             'nodes' => $nodes,
-            'question' => $question,
+//            'question' => $question,
             'answer' => $answer
         ]);
     }
