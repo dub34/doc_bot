@@ -44,7 +44,7 @@ class RemoteNode extends Model
         return $behaviors;
     }
 
-    public function find(){
+    public static function find(){
         return \Yii::$app->get('botParser')->getNodes();
     }
 
