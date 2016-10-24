@@ -22,33 +22,33 @@ $config = [
         ],
         'response' => [
             'class' => 'yii\web\Response',
-            'on beforeSend' => function ($event) {
-                /** @var \yii\web\Response $response */
-                $response = $event->sender;
-                if (!$response->isSuccessful && is_array($response->data)) {
-                    if (isset($response->data['status'])) {
-                        $response->data = [
-                            'result' => $response->data['status'],
-                            'resultMessage' => $response->data['message'],
-                        ];
-                    } // Data Validation Failed.
-                    else {
-                        if ($response->getStatusCode() == 422) {
-                            $response->data = [
-                                'result' => $response->getStatusCode(),
-                                'resultMessage' => $response->statusText,
-                                'data' => $response->data
-                            ];
-                        } else {
-                            $response->data = [
-                                'result' => $response->getStatusCode(),
-                                'resultMessage' => $response->statusText,
-                                'data' => null
-                            ];
-                        }
-                    }
-                }
-            },
+//            'on beforeSend' => function ($event) {
+//                /** @var \yii\web\Response $response */
+//                $response = $event->sender;
+//                if (!$response->isSuccessful && is_array($response->data)) {
+//                    if (isset($response->data['status'])) {
+//                        $response->data = [
+//                            'result' => $response->data['status'],
+//                            'resultMessage' => $response->data['message'],
+//                        ];
+//                    } // Data Validation Failed.
+//                    else {
+//                        if ($response->getStatusCode() == 422) {
+//                            $response->data = [
+//                                'result' => $response->getStatusCode(),
+//                                'resultMessage' => $response->statusText,
+//                                'data' => $response->data
+//                            ];
+//                        } else {
+//                            $response->data = [
+//                                'result' => $response->getStatusCode(),
+//                                'resultMessage' => $response->statusText,
+//                                'data' => null
+//                            ];
+//                        }
+//                    }
+//                }
+//            },
         ],
         'wordsExtractor' => [
             'class' => 'app\components\WordsExtractor',
