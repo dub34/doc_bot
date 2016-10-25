@@ -5,10 +5,26 @@ namespace app\api\modules\v1\controllers;
 
 use app\models\search\NodeSearch;
 use app\models\WordExtractor;
+use yii\filters\ContentNegotiator;
 use yii\rest\Controller;
+use yii\web\Response;
 
 class BlockController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::className(),
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                    'text/html' => Response::FORMAT_JSON,
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex($userQuery)
     {
         $model = new WordExtractor([
