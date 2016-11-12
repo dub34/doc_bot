@@ -17,7 +17,7 @@ use yii\httpclient\Request;
 
 class BotParser extends Object
 {
-    public $botId = 92;
+    public $botId = 85;
     public $url = 'http://getmybot.herokuapp.com/api/semantic_blocks/';
     public $apiToken;
 

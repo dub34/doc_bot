@@ -45,7 +45,7 @@ class NodeSearch extends Node
          * @var $keyword ArticleWord
          */
         foreach ($keywords->getStemm()->words as $keyword) {
-            $queryString = 'tag:' . $keyword->normalized().'~';
+            $queryString = 'tag:' . $keyword->normalized().'~0.6';
 
 //            if (null !== $this->root && !is_array($this->root)) {
 //                $queryString .= " root:(+$this->root)";
